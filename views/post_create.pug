@@ -1,0 +1,13 @@
+extends layout
+
+block content
+    h1 Nouvel article
+    form(method="post")
+        div
+            label(for="title") Titre
+            input(id="title" name="title" type="text")
+        div
+            label(for="content") Contenu
+            textarea(id="content" name="content" rows="10")
+        div
+            button Créer

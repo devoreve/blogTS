@@ -1,0 +1,8 @@
+extends layout
+
+block content
+    article
+        header
+            h1 #{post.title}
+            p Rédigé le #{post.createdAt}
+        p #{post.content}

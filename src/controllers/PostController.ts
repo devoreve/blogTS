@@ -23,8 +23,7 @@ export class PostController {
     }
 
     async store(req: Request, res: Response): Promise<void> {
-        const { title, content } = req.body;
-        await this.postRepository.createPost(title, content);
+        await this.postRepository.createPost(req.body);
         res.redirect("/");
     }
 }

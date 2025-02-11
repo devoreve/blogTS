@@ -5,11 +5,20 @@ html
         title Blog -
     body
         header
-            nav
+            nav.container-fluid
                 ul
                     li
                         a(href="/") Accueil
                     li
                         a(href="/posts/create") Nouvel article
+                ul
+                    if session.userId
+                        li
+                            a(href="/logout") Déconnexion
+                    else
+                        li
+                            a(href="/register") Inscription
+                        li
+                            a(href="/login") Connexion
         main.container
             block content

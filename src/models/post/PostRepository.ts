@@ -2,7 +2,11 @@ import Post from "./Post";
 
 export class PostRepository {
     async getAllPosts(): Promise<Post[]> {
-        return await Post.findAll();
+        return await Post.findAll({
+            order: [
+                ['createdAt', 'DESC']
+            ]
+        });
     }
 
     async getPostById(id: number): Promise<Post | null> {

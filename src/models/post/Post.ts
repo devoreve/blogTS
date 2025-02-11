@@ -1,11 +1,12 @@
 import {DataTypes, Model} from "sequelize";
-import sequelize from "../config/database";
+import sequelize from "../../config/sequelize";
 
 class Post extends Model {
     public id!: number | null;
     public title!: string;
     public content!: string;
-    public created_at!: Date;
+    public createdAt!: Date;
+    public updatedAt!: Date;
 }
 
 Post.init({
@@ -22,15 +23,19 @@ Post.init({
             type: DataTypes.TEXT,
             allowNull: false,
         },
-        created_at: {
+        createdAt: {
             type: DataTypes.DATE,
             defaultValue: DataTypes.NOW,
         },
+        updatedAt: {
+            type: DataTypes.DATE,
+            defaultValue: DataTypes.NOW
+        }
     },
     {
         sequelize,
         tableName: "posts",
-        timestamps: false
+        timestamps: true
     });
 
 export default Post;

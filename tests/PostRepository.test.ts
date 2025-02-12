@@ -1,8 +1,8 @@
 import { describe, test, expect, vi, beforeEach, afterEach } from "vitest";
-import Post from "../src/models/post/Post";
+import Post from "../src/infrastructure/models/PostModel";
 import { PostRepository } from "../src/infrastructure/repositories/PostRepository";
 
-vi.mock("../src/models/post/Post");
+vi.mock("../src/infrastructure/models/PostModel");
 
 describe("PostRepository", () => {
     let postRepository: PostRepository;

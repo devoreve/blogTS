@@ -1,21 +1,22 @@
 import { Request, Response } from "express";
-import { PostRepository } from "../../infrastructure/repositories/PostRepository";
+import PostService from "../../application/services/PostService";
+import PostDTO from "../../application/dtos/PostDTO";
 
 export class PostController {
-    constructor(private postRepository: PostRepository) {}
+    constructor(private postService: PostService) {}
 
     async index(req: Request, res: Response): Promise<void> {
-        const posts = await this.postRepository.getAllPosts();
+        const posts: PostDTO[] = await this.postService.getAllPosts();
         res.render("post/post_list", { posts });
     }
 
     async show(req: Request, res: Response): Promise<void> {
-        const post = await this.postRepository.getPostById(Number(req.params.id));
-        if (!post) {
-            res.status(404).send("Post not found");
-            return;
+        try {
+            const post: PostDTO = await this.postService.getPostById(Number(req.params.id));
+            res.render("post/post_detail", { post });
+        } catch (error: any) {
+            res.status(404).send(error.message);
         }
-        res.render("post/post_detail", { post });
     }
 
     create(req: Request, res: Response): void {
@@ -31,7 +32,7 @@ export class PostController {
             return;
         }
 
-        await this.postRepository.createPost(title, content, req.session.userId);
+        await this.postService.createPost(title, content, req.session.userId);
         res.redirect("/");
     }
 }

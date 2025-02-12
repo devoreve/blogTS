@@ -1,6 +1,6 @@
 import { describe, test, expect, vi, beforeEach, afterEach } from "vitest";
 import Post from "../src/models/post/Post";
-import { PostRepository } from "../src/models/post/PostRepository";
+import { PostRepository } from "../src/infrastructure/repositories/PostRepository";
 
 vi.mock("../src/models/post/Post");
 

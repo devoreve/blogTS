@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
-import User from "../models/user/User";
-import {UserRepository} from "../models/user/UserRepository";
+import User from "../../models/user/User";
+import {UserRepository} from "../../infrastructure/repositories/UserRepository";
 
 class AuthController {
     constructor(private userRepository: UserRepository) {}

@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { PostController } from "../controllers/PostController";
-import { PostRepository } from "../models/post/PostRepository";
+import { PostRepository } from "../../infrastructure/repositories/PostRepository";
 import {authMiddleware} from "../middlewares/authMiddleware";
 
 const router = Router();

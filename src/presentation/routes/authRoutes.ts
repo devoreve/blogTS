@@ -1,6 +1,6 @@
 import {Router} from "express";
 import AuthController from "../controllers/AuthController";
-import {UserRepository} from "../models/user/UserRepository";
+import {UserRepository} from "../../infrastructure/repositories/UserRepository";
 
 const router = Router();
 

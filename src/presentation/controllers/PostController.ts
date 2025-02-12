@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { PostRepository } from "../models/post/PostRepository";
+import { PostRepository } from "../../infrastructure/repositories/PostRepository";
 
 export class PostController {
     constructor(private postRepository: PostRepository) {}

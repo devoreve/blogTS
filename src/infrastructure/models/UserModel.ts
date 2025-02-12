@@ -1,38 +1,29 @@
 import {DataTypes, Model} from "sequelize";
 import sequelize from "../../config/sequelize";
-import User from "../user/User";
 
-class Post extends Model {
-    public id!: number | null;
-    public title!: string;
-    public content!: string;
-    public userId!: number;
+class UserModel extends Model {
+    public id!: number;
+    public email!: string;
+    public password!: string;
     public createdAt!: Date;
     public updatedAt!: Date;
 }
 
-Post.init({
+UserModel.init(
+    {
         id: {
             type: DataTypes.INTEGER,
             autoIncrement: true,
             primaryKey: true,
         },
-        title: {
+        email: {
             type: DataTypes.STRING,
             allowNull: false,
+            unique: true,
         },
-        content: {
-            type: DataTypes.TEXT,
+        password: {
+            type: DataTypes.STRING,
             allowNull: false,
-        },
-        userId: {
-            type: DataTypes.INTEGER,
-            allowNull: false,
-            references: {
-                model: "Users",
-                key: "id",
-            },
-            onDelete: "CASCADE",
         },
         createdAt: {
             type: DataTypes.DATE,
@@ -45,10 +36,9 @@ Post.init({
     },
     {
         sequelize,
-        tableName: "posts",
+        tableName: "users",
         timestamps: true
-    });
+    }
+);
 
-Post.belongsTo(User, { foreignKey: "userId" });
-
-export default Post;
+export default UserModel;

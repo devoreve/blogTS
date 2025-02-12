@@ -19,11 +19,19 @@ export class PostController {
     }
 
     create(req: Request, res: Response): void {
-        res.render("post/post_create");
+        res.render("post/post_create", {errors: req.flash("errors")});
     }
 
     async store(req: Request, res: Response): Promise<void> {
-        await this.postRepository.createPost(req.body);
+        const {title, content} = req.body;
+
+        if (!title || !content) {
+            req.flash("errors", ["Le titre et le contenu sont obligatoires."]);
+            res.redirect("/posts/create");
+            return;
+        }
+
+        await this.postRepository.createPost(title, content, req.session.userId);
         res.redirect("/");
     }
 }

@@ -2,6 +2,12 @@ extends ../layout
 
 block content
     h1 Nouvel article
+
+    if errors && errors.length
+        ul
+            each error in errors
+                li(style="color: #b22222")= error
+
     form(method="post")
         div
             label(for="title") Titre

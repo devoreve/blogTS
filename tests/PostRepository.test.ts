@@ -17,8 +17,8 @@ describe("PostRepository", () => {
 
     test("getAllPosts should return a list of posts", async () => {
         const mockPosts = [
-            { id: 1, title: "Post 1", content: "Contenu 1", createdAt: new Date(), updatedAt: new Date() },
-            { id: 2, title: "Post 2", content: "Contenu 2", createdAt: new Date(), updatedAt: new Date() },
+            { id: 1, title: "Post 1", content: "Contenu 1", userId: 1, createdAt: new Date(), updatedAt: new Date() },
+            { id: 2, title: "Post 2", content: "Contenu 2", userId: 1, createdAt: new Date(), updatedAt: new Date() },
         ];
 
         (Post.findAll as jest.Mock).mockResolvedValue(mockPosts);
@@ -30,7 +30,7 @@ describe("PostRepository", () => {
     });
 
     test("getPostById should return a post when it exists", async () => {
-        const mockPost = { id: 1, title: "Post 1", content: "Contenu 1", createdAt: new Date(), updatedAt: new Date() };
+        const mockPost = { id: 1, title: "Post 1", content: "Contenu 1", userId: 1, createdAt: new Date(), updatedAt: new Date() };
 
         (Post.findByPk as jest.Mock).mockResolvedValue(mockPost);
 
@@ -50,12 +50,12 @@ describe("PostRepository", () => {
     });
 
     test("createPost should return the created post", async () => {
-        const postData = { title: "New Post", content: "Some content" };
+        const postData = { title: "New Post", content: "Some content", userId: 1 };
         const mockCreatedPost = { id: 3, ...postData, createdAt: new Date(), updatedAt: new Date() };
 
         (Post.create as jest.Mock).mockResolvedValue(mockCreatedPost);
 
-        const createdPost = await postRepository.createPost(postData);
+        const createdPost = await postRepository.createPost(postData.title, postData.content, postData.userId);
 
         expect(Post.create).toHaveBeenCalledWith(postData);
         expect(createdPost).toEqual(mockCreatedPost);

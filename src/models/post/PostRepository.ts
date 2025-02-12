@@ -13,7 +13,7 @@ export class PostRepository {
         return await Post.findByPk(id);
     }
 
-    async createPost(data: {title: string, content: string}): Promise<Post> {
-        return await Post.create(data);
+    async createPost(title: string, content: string, userId: number): Promise<Post> {
+        return await Post.create({title, content, userId});
     }
 }

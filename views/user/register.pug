@@ -2,7 +2,20 @@ extends ../layout
 
 block content
     h1 Inscription
+
+    if errors && errors.length
+        ul
+            each error in errors
+                li(style="color: #b22222")= error
+
     form(method="POST")
-        input(type="email" name="email" placeholder="Email" required)
-        input(type="password" name="password" placeholder="Mot de passe" required)
+        div
+            label(for="email") Email
+            input(type="email" id="email" name="email" placeholder="Exemple : john.doe@adresse.fr" required)
+        div
+            label(for="password") Mot de passe
+            input(type="password" id="password" name="password" required)
+        div
+            label(for="confirm-password")
+            input(type="password" id="confirm-password" name="confirm_password" placeholder="Au-moins 8 caractères")
         button(type="submit") S'inscrire

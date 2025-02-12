@@ -6,16 +6,38 @@ class AuthController {
     constructor(private userRepository: UserRepository) {}
 
     async showRegister(req: Request, res: Response): Promise<void> {
-        res.render("user/register");
+        res.render("user/register", {
+            errors: req.flash("errors")
+        });
     }
 
     async register(req: Request, res: Response): Promise<void> {
-        const { email, password } = req.body;
+        const { email, password, confirm_password: confirmPassword} = req.body;
+        const errors: string[] = [];
+
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+        if (password !== confirmPassword) {
+            errors.push("Les mots de passe ne correspondent pas");
+        }
+
+        if (password.length < 8) {
+            errors.push("Le mot de passe doit contenir au moins 8 caractères.");
+        }
+
+        if (!emailRegex.test(email)) {
+            errors.push("Le format de l'email est invalide.");
+        }
 
         const existingUser = await this.userRepository.findByEmail(email);
 
         if (existingUser) {
-            res.status(400).send("L'utilisateur existe déjà");
+            errors.push("L'utilisateur existe déjà");
+        }
+
+        if (errors.length > 0) {
+            req.flash("errors", errors);
+            res.redirect("/register");
             return;
         }
 
@@ -24,20 +46,23 @@ class AuthController {
             req.session.userId = user.id;
             res.redirect("/");
         } catch (error) {
-            res.status(400).send("Erreur lors de l'inscription");
+           req.flash("errors", ["Erreur lors de l'inscription"]);
+           res.redirect("/register");
         }
     }
 
     async showLogin(req: Request, res: Response) {
-        res.render("user/login");
+        res.render("user/login", {errors: req.flash("errors")});
     }
 
     async login(req: Request, res: Response): Promise<void> {
         const { email, password } = req.body;
+
         const user: User|null = await this.userRepository.findByEmail(email);
 
         if (!user || !(await user.comparePassword(password))) {
-            res.status(401).send("Email ou mot de passe incorrect");
+            req.flash("errors", ["Email ou mot de passe incorrect."]);
+            res.redirect("/login");
             return;
         }
 
@@ -48,7 +73,9 @@ class AuthController {
     logout(req: Request, res: Response) {
         req.session.destroy((err) => {
             if (err) {
-                return res.status(500).send("Erreur lors de la déconnexion");
+                req.flash("errors", ["Erreur lors de la déconnexion."]);
+                res.redirect("/");
+                return;
             }
             res.redirect("/login");
         });

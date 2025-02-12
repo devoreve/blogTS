@@ -4,5 +4,9 @@ block content
     h1 Liste des articles
     ul
         each post in posts
-            li
-                a(href=`/posts/${post.id}`) #{post.title}
+            li(style="list-style: none")
+                article
+                    header
+                        h1
+                            a(href=`/posts/${post.id}`) #{post.title}
+                    p #{post.content}

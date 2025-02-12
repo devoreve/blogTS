@@ -6,6 +6,7 @@ import postRoutes from "./src/routes/postRoutes";
 import authRoutes from "./src/routes/authRoutes";
 import {sessionMiddleware} from "./src/config/session";
 import sequelize from "./src/config/sequelize";
+import flash from "connect-flash";
 
 dotenv.config();
 const app = express();
@@ -17,6 +18,7 @@ app.set("views", path.join(__dirname, "../views"));
 
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(sessionMiddleware);
+app.use(flash());
 sequelize.sync();
 app.use((req, res, next) => {
     res.locals.session = req.session;

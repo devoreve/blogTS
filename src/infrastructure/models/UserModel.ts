@@ -1,20 +1,18 @@
-import { DataTypes, Model } from "sequelize";
+import {DataTypes, Model} from "sequelize";
 import sequelize from "../../config/sequelize";
-import bcrypt from "bcrypt";
 
-class User extends Model {
+/**
+ * Modèle sequelize des utilisateurs (lié à l'ORM)
+ */
+class UserModel extends Model {
     public id!: number;
     public email!: string;
     public password!: string;
     public createdAt!: Date;
     public updatedAt!: Date;
-
-    async comparePassword(password: string): Promise<boolean> {
-        return bcrypt.compare(password, this.password);
-    }
 }
 
-User.init(
+UserModel.init(
     {
         id: {
             type: DataTypes.INTEGER,
@@ -46,8 +44,4 @@ User.init(
     }
 );
 
-User.beforeCreate(async (user) => {
-    user.password = await bcrypt.hash(user.password, 10);
-});
-
-export default User;
+export default UserModel;

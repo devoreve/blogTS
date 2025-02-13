@@ -1,8 +1,11 @@
 import {DataTypes, Model} from "sequelize";
 import sequelize from "../../config/sequelize";
-import User from "../user/User";
+import UserModel from "./UserModel";
 
-class Post extends Model {
+/**
+ * Modèle sequelize des articles (lié à l'ORM)
+ */
+class PostModel extends Model {
     public id!: number | null;
     public title!: string;
     public content!: string;
@@ -11,7 +14,7 @@ class Post extends Model {
     public updatedAt!: Date;
 }
 
-Post.init({
+PostModel.init({
         id: {
             type: DataTypes.INTEGER,
             autoIncrement: true,
@@ -49,6 +52,6 @@ Post.init({
         timestamps: true
     });
 
-Post.belongsTo(User, { foreignKey: "userId" });
+PostModel.belongsTo(UserModel, { foreignKey: "userId" });
 
-export default Post;
+export default PostModel;

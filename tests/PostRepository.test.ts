@@ -1,8 +1,11 @@
 import { describe, test, expect, vi, beforeEach, afterEach } from "vitest";
-import Post from "../src/models/post/Post";
-import { PostRepository } from "../src/models/post/PostRepository";
+import PostModel from "../src/infrastructure/models/PostModel";
+import {PostMapper} from "../src/infrastructure/mappers/PostMapper";
+import Post from "../src/domain/entities/Post";
+import { PostRepository } from "../src/infrastructure/repositories/PostRepository";
 
-vi.mock("../src/models/post/Post");
+vi.mock("../src/infrastructure/models/PostModel");
+vi.mock("../src/infrastructure/mappers/PostMapper");
 
 describe("PostRepository", () => {
     let postRepository: PostRepository;
@@ -16,48 +19,94 @@ describe("PostRepository", () => {
     });
 
     test("getAllPosts should return a list of posts", async () => {
-        const mockPosts = [
-            { id: 1, title: "Post 1", content: "Contenu 1", userId: 1, createdAt: new Date(), updatedAt: new Date() },
-            { id: 2, title: "Post 2", content: "Contenu 2", userId: 1, createdAt: new Date(), updatedAt: new Date() },
+        const mockPosts: Post[] = [
+            new Post(1, "Post 1", "Contenu 1", 1, new Date(), new Date()),
+            new Post(2, "Post 2", "Contenu 2", 1, new Date(), new Date()),
         ];
 
-        (Post.findAll as jest.Mock).mockResolvedValue(mockPosts);
+        const mockPostModels = mockPosts.map(post => ({
+            id: post.id,
+            title: post.title,
+            content: post.content,
+            userId: post.userId,
+            createdAt: post.createdAt,
+            updatedAt: post.updatedAt
+        }));
 
-        const posts = await postRepository.getAllPosts();
+        (PostModel.findAll as jest.Mock).mockResolvedValue(mockPostModels);
+        (PostMapper.toDomain as jest.Mock).mockImplementation((postModel) => {
+            return new Post(postModel.id, postModel.title, postModel.content, postModel.userId, postModel.createdAt, postModel.updatedAt);
+        });
 
-        expect(Post.findAll).toHaveBeenCalledTimes(1);
+        const posts: Post[] = await postRepository.getAllPosts();
+
+        expect(PostModel.findAll).toHaveBeenCalledTimes(1);
         expect(posts).toEqual(mockPosts);
     });
 
     test("getPostById should return a post when it exists", async () => {
-        const mockPost = { id: 1, title: "Post 1", content: "Contenu 1", userId: 1, createdAt: new Date(), updatedAt: new Date() };
+        const mockPostModel = {
+            id: 1,
+            title: "Post 1",
+            content: "Contenu 1",
+            userId: 1,
+            createdAt: new Date(),
+            updatedAt: new Date(),
+        };
 
-        (Post.findByPk as jest.Mock).mockResolvedValue(mockPost);
+        const mockPost: Post = new Post(
+            mockPostModel.id,
+            mockPostModel.title,
+            mockPostModel.content,
+            mockPostModel.userId,
+            mockPostModel.createdAt,
+            mockPostModel.updatedAt
+        );
 
-        const post = await postRepository.getPostById(1);
+        (PostModel.findByPk as jest.Mock).mockResolvedValue(mockPostModel);
+        (PostMapper.toDomain as jest.Mock).mockReturnValue(mockPost);
 
-        expect(Post.findByPk).toHaveBeenCalledWith(1);
+        const post: Post | null = await postRepository.getPostById(1);
+
+        expect(PostModel.findByPk).toHaveBeenCalledWith(1);
+        expect(PostMapper.toDomain).toHaveBeenCalledWith(mockPostModel);
         expect(post).toEqual(mockPost);
     });
 
     test("getPostById should return null when post is not found", async () => {
-        (Post.findByPk as jest.Mock).mockResolvedValue(null);
+        (PostModel.findByPk as jest.Mock).mockResolvedValue(null);
 
-        const post = await postRepository.getPostById(999);
+        const post: Post | null = await postRepository.getPostById(999);
 
-        expect(Post.findByPk).toHaveBeenCalledWith(999);
+        expect(PostModel.findByPk).toHaveBeenCalledWith(999);
         expect(post).toBeNull();
     });
 
     test("createPost should return the created post", async () => {
         const postData = { title: "New Post", content: "Some content", userId: 1 };
-        const mockCreatedPost = { id: 3, ...postData, createdAt: new Date(), updatedAt: new Date() };
+        const mockPostModel = {
+            id: 3,
+            ...postData,
+            createdAt: new Date(),
+            updatedAt: new Date(),
+        };
 
-        (Post.create as jest.Mock).mockResolvedValue(mockCreatedPost);
+        const mockPost: Post = new Post(
+            mockPostModel.id,
+            mockPostModel.title,
+            mockPostModel.content,
+            mockPostModel.userId,
+            mockPostModel.createdAt,
+            mockPostModel.updatedAt
+        );
 
-        const createdPost = await postRepository.createPost(postData.title, postData.content, postData.userId);
+        (PostModel.create as jest.Mock).mockResolvedValue(mockPostModel);
+        (PostMapper.toDomain as jest.Mock).mockReturnValue(mockPost);
 
-        expect(Post.create).toHaveBeenCalledWith(postData);
-        expect(createdPost).toEqual(mockCreatedPost);
+        const createdPost: Post = await postRepository.createPost(postData.title, postData.content, postData.userId);
+
+        expect(PostModel.create).toHaveBeenCalledWith(postData);
+        expect(PostMapper.toDomain).toHaveBeenCalledWith(mockPostModel);
+        expect(createdPost).toEqual(mockPost);
     });
 });

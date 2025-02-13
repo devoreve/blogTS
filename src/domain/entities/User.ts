@@ -1,26 +1,25 @@
+import Email from "../valueObjects/Email";
+import Password from "../valueObjects/Password";
+
 export default class User {
+    readonly _id: number;
+    private _email: Email;
+    private _password: Password;
+    private _createdAt: Date;
+    private _updatedAt: Date;
+
     constructor(
-        private _id: number,
-        private _email: string,
-        private _password: string,
-        private _createdAt: Date,
-        private _updatedAt: Date
+        id: number,
+        email: string,
+        password: string,
+        createdAt: Date = new Date(),
+        updatedAt: Date = new Date()
     ) {
-        this.email = _email;
-        this.password = _password;
-    }
-
-    static validateEmail(email: string): void {
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        if (!emailRegex.test(email)) {
-            throw new Error("Email invalide.");
-        }
-    }
-
-    static validatePassword(password: string): void {
-        if (password.length < 8) {
-            throw new Error("Le mot de passe doit contenir au moins 8 caractères.");
-        }
+        this._id = id;
+        this._email = new Email(email);
+        this._password = new Password(password);
+        this._createdAt = createdAt;
+        this._updatedAt = updatedAt;
     }
 
     get id(): number {
@@ -28,21 +27,19 @@ export default class User {
     }
 
     get email(): string {
-        return this._email;
+        return this._email.email;
     }
 
     set email(value: string) {
-        User.validateEmail(value);
-        this._email = value;
+        this._email = new Email(value);
     }
 
     get password(): string {
-        return this._password;
+        return this._password.password;
     }
 
     set password(value: string) {
-        User.validatePassword(value);
-        this._password = value;
+        this._password = new Password(value);
     }
 
     get createdAt(): Date {

@@ -25,6 +25,6 @@ describe("Post", () => {
 
     test("Devrait lever une erreur lors de la modification du titre avec une valeur invalide", () => {
         const post = new Post(1, "Titre valide", "Contenu valide", 1, new Date(), new Date());
-        expect(() => { post.title = "Hi"; }).toThrow("Le titre doit faire au-moins 3 caractères");
+        expect(() => { post.title = "Hi"; }).toThrow("Le titre doit faire au-moins 3 caractères.");
     });
 });

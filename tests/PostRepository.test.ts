@@ -20,8 +20,8 @@ describe("PostRepository", () => {
 
     test("getAllPosts should return a list of posts", async () => {
         const mockPosts: Post[] = [
-            new Post(1, "Post 1", "Contenu 1", 1, new Date(), new Date()),
-            new Post(2, "Post 2", "Contenu 2", 1, new Date(), new Date()),
+            new Post(1, "Post 1", "Contenu 1", 1),
+            new Post(2, "Post 2", "Contenu 2", 1),
         ];
 
         const mockPostModels = mockPosts.map(post => ({

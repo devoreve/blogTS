@@ -1,48 +1,48 @@
+import PostTitle from "../valueObjects/PostTitle";
+import PostContent from "../valueObjects/PostContent";
+
 export default class Post {
+    readonly _id: number;
+    private _title: PostTitle;
+    private _content: PostContent;
+    private _userId: number;
+    private _createdAt: Date;
+    private _updatedAt: Date;
+
     constructor(
-        private _id: number | null,
-        private _title: string,
-        private _content: string,
-        private _userId: number,
-        private _createdAt: Date,
-        private _updatedAt: Date
+        id: number,
+        title: string,
+        content: string,
+        userId: number,
+        createdAt: Date = new Date(),
+        updatedAt: Date = new Date()
     ) {
-        this.title = _title;
-        this.content = _content;
+        this._id = id;
+        this._title = new PostTitle(title);
+        this._content = new PostContent(content);
+        this._userId = userId;
+        this._createdAt = createdAt;
+        this._updatedAt = updatedAt;
     }
 
-    static validateTitle(title: string): void {
-        if (!title || title.length < 3) {
-            throw new Error("Le titre doit faire au-moins 3 caractères");
-        }
-    }
-
-    static validateContent(content: string): void {
-        if (!content || content.length < 3) {
-            throw new Error("L'article doit faire au-moins 3 caractères");
-        }
-    }
-
-    get id(): number | null {
+    get id(): number {
         return this._id;
     }
 
     get title(): string {
-        return this._title;
+        return this._title.title;
     }
 
     set title(value: string) {
-        Post.validateTitle(value);
-        this._title = value;
+        this._title = new PostTitle(value);
     }
 
     get content(): string {
-        return this._content;
+        return this._content.content;
     }
 
     set content(value: string) {
-        Post.validateContent(value);
-        this._content = value;
+        this._content = new PostContent(value);
     }
 
     get userId(): number {

@@ -1,5 +1,8 @@
 import bcrypt from "bcrypt";
 
+/**
+ * Service qui permet de gérer le hashage des mots de passe
+ */
 export class PasswordService {
     private static readonly SALT_ROUNDS = 10;
 

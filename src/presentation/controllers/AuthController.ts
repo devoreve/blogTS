@@ -52,6 +52,7 @@ class AuthController {
     }
 
     logout(req: Request, res: Response) {
+        // Suppression de la session (aucun lien avec les services)
         req.session.destroy((err) => {
             if (err) {
                 req.flash("errors", ["Erreur lors de la déconnexion."]);

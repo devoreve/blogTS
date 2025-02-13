@@ -2,6 +2,9 @@ import {DataTypes, Model} from "sequelize";
 import sequelize from "../../config/sequelize";
 import UserModel from "./UserModel";
 
+/**
+ * Modèle sequelize des articles (lié à l'ORM)
+ */
 class PostModel extends Model {
     public id!: number | null;
     public title!: string;

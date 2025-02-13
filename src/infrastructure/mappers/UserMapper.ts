@@ -1,6 +1,10 @@
 import UserModel from "../models/UserModel";
 import User from "../../domain/entities/User";
 
+/**
+ * Transforme un objet UserModel (modèle ORM) en User (entité métier)
+ * Et vice-versa
+ */
 export class UserMapper {
     static toDomain(userModel: UserModel): User {
         return new User(

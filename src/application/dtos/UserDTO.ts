@@ -1,3 +1,3 @@
 export default class UserDTO {
-    constructor(public id: number, public email: string) {}
+    constructor(readonly id: number, readonly email: string) {}
 }

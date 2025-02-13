@@ -1,4 +1,4 @@
-import { Request, Response } from "express";
+import {Request, Response} from "express";
 import PostService from "../../application/services/PostService";
 import PostDTO from "../../application/dtos/PostDTO";
 
@@ -6,16 +6,20 @@ export class PostController {
     constructor(private postService: PostService) {}
 
     async index(req: Request, res: Response): Promise<void> {
+        // On récupère tous les articles (uniquement les DTO contenant les données à afficher)
+        // depuis le service
         const posts: PostDTO[] = await this.postService.getAllPosts();
-        res.render("post/post_list", { posts });
+        res.render("post/post_list", {posts});
     }
 
     async show(req: Request, res: Response): Promise<void> {
         try {
+            // On récupère les données de l'article correspondant grâce au service
             const post: PostDTO = await this.postService.getPostById(Number(req.params.id));
-            res.render("post/post_detail", { post });
+            res.render("post/post_detail", {post});
         } catch (error: any) {
-            res.status(404).send(error.message);
+            // Si une erreur a été déclenchée, on la gère
+            res.status(404).render("404", {message: error.message});
         }
     }
 
@@ -24,15 +28,18 @@ export class PostController {
     }
 
     async store(req: Request, res: Response): Promise<void> {
-        const {title, content} = req.body;
+        try {
+            // On récupère les données du formulaire
+            const {title, content} = req.body;
 
-        if (!title || !content) {
-            req.flash("errors", ["Le titre et le contenu sont obligatoires."]);
+            // On demande au service de créer l'article à partir de ces données (et de la session)
+            await this.postService.createPost(title, content, req.session.userId);
+            res.redirect("/");
+        } catch (error: any) {
+            // Si une erreur est survenue lors de la validation des entités métier,
+            // on la gère
+            req.flash("errors", [error.message]);
             res.redirect("/posts/create");
-            return;
         }
-
-        await this.postService.createPost(title, content, req.session.userId);
-        res.redirect("/");
     }
 }

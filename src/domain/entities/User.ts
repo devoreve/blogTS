@@ -1,13 +1,13 @@
 export default class User {
     constructor(
-        public id: number,
-        public email: string,
-        public password: string,
-        public createdAt: Date,
-        public updatedAt: Date
+        private _id: number,
+        private _email: string,
+        private _password: string,
+        private _createdAt: Date,
+        private _updatedAt: Date
     ) {
-        User.validateEmail(email);
-        User.validatePassword(password);
+        this.email = _email;
+        this.password = _password;
     }
 
     static validateEmail(email: string): void {
@@ -21,5 +21,43 @@ export default class User {
         if (password.length < 8) {
             throw new Error("Le mot de passe doit contenir au moins 8 caractères.");
         }
+    }
+
+    get id(): number {
+        return this._id;
+    }
+
+    get email(): string {
+        return this._email;
+    }
+
+    set email(value: string) {
+        User.validateEmail(value);
+        this._email = value;
+    }
+
+    get password(): string {
+        return this._password;
+    }
+
+    set password(value: string) {
+        User.validatePassword(value);
+        this._password = value;
+    }
+
+    get createdAt(): Date {
+        return this._createdAt;
+    }
+
+    set createdAt(value: Date) {
+        this._createdAt = value;
+    }
+
+    get updatedAt(): Date {
+        return this._updatedAt;
+    }
+
+    set updatedAt(value: Date) {
+        this._updatedAt = value;
     }
 }

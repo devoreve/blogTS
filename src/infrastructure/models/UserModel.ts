@@ -1,6 +1,9 @@
 import {DataTypes, Model} from "sequelize";
 import sequelize from "../../config/sequelize";
 
+/**
+ * Modèle sequelize des utilisateurs (lié à l'ORM)
+ */
 class UserModel extends Model {
     public id!: number;
     public email!: string;

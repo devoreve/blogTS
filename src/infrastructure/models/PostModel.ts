@@ -6,7 +6,7 @@ import UserModel from "./UserModel";
  * Modèle sequelize des articles (lié à l'ORM)
  */
 class PostModel extends Model {
-    public id!: number | null;
+    public id!: number;
     public title!: string;
     public content!: string;
     public userId!: number;

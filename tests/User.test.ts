@@ -13,7 +13,7 @@ describe("User", () => {
     });
 
     test("Devrait lever une erreur pour un mot de passe trop court", () => {
-        expect(() => new User(1, "test@example.com", "12345", new Date(), new Date())).toThrow("Le mot de passe doit contenir au moins 8 caractères.");
+        expect(() => new User(1, "test@example.com", "12345", new Date(), new Date())).toThrow("Le mot de passe doit contenir au-moins 8 caractères.");
     });
 
     test("Devrait permettre de modifier l'email avec un email valide", () => {
@@ -35,6 +35,6 @@ describe("User", () => {
 
     test("Devrait lever une erreur lors de la modification du mot de passe avec une valeur invalide", () => {
         const user = new User(1, "test@example.com", "password123", new Date(), new Date());
-        expect(() => { user.password = "short"; }).toThrow("Le mot de passe doit contenir au moins 8 caractères.");
+        expect(() => { user.password = "short"; }).toThrow("Le mot de passe doit contenir au-moins 8 caractères.");
     });
 });
